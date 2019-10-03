@@ -22,16 +22,15 @@ def user():
     #Get user information
     if request.method == 'GET':
         data = request.get_json(force=True)
-        print(data)
-        query = User.query.filter_by(name=data["name"])
-        print(query)
-        
-        return "testing", 200
+        result = db.session.query(User).all()
+        return jsonify([r.serialize() for r in result]), 200
+
     #Create new user OR logging in
     if request.method == 'POST':
         data = request.get_json(force=True);
-        query = db.execute("SELECT * FROM users WHERE name={};".format(data.name))
-        print(query)
+        print(data["name"])
+        query = User.query.filter_by(name=data["name"])
+        print(query.serialize())
         return "okay", 200
 
 @app.route('/register', methods=['POST'])
@@ -40,7 +39,30 @@ def register_acc():
     #Create new user if it does not exist else returns an error message
     if request.method == 'POST':
         print("Attempting to create new user")
-        return "poop", 200
+        data = request.get_json(force=True)
+        #Check if email already exist in database
+        query = User.query.filter_by(email=data["email"]).first()
+
+        #CREATE NEW USER
+        if query is not None:
+            print(query.serialize())
+            return jsonify(query.serialize()), 200
+        else:
+            print("Creating new user\n")
+            name = data["name"]
+            email = data["email"]
+            password = data["password"]
+            try:
+                user=User(
+                    name=name,
+                    email=email,
+                    password=password
+                )
+                db.session.add(user)
+                db.session.commit()
+                return "New user added. User id={}".format(user.id)
+            except Exception as e:
+                return (str(e))
 
 @app.route('/fblogin', methods=['POST'])
 def fb_login():
