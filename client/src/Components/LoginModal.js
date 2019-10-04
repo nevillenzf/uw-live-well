@@ -162,7 +162,7 @@ class LoginModal extends React.Component {
             <Form.Control type="password" placeholder="Confirm Password" />
           </Form.Group>
           <ButtonToolbar>
-            <Button variant="primary" type="submit">
+            <Button variant="danger" type="submit">
               Register
             </Button>
             <Button variant="secondary" onClick={()=>{this.setState({isRegistering:false})}}>
@@ -176,12 +176,13 @@ class LoginModal extends React.Component {
     {
       return(
         <div>
-        <div>
+        <div className="fb-button" >
           <FacebookLogin
             appId="705105513337686"
             autoLoad={false}
             fields="name,email,picture"
-            callback={this.responseFacebook} />
+            callback={this.responseFacebook}
+            />
         </div>
           <hr/>
         <div>
@@ -200,10 +201,10 @@ class LoginModal extends React.Component {
               <Form.Control type="password" placeholder="Password" />
             </Form.Group>
             <ButtonToolbar>
-              <Button variant="primary" type="submit">
+              <Button variant="secondary" type="submit">
                 Sign In
               </Button>
-              <Button variant="success" onClick={()=>{this.setState({isRegistering:true})}}>
+              <Button variant="danger" onClick={()=>{this.setState({isRegistering:true})}}>
                 Register
               </Button>
             </ButtonToolbar>
@@ -232,7 +233,7 @@ class LoginModal extends React.Component {
           </Modal.Body>
 
           <Modal.Footer>
-            <Button variant="primary" onClick={this.props.onHide}>
+            <Button variant="secondary" onClick={this.props.onHide}>
               Cancel
             </Button>
           </Modal.Footer>

@@ -56,7 +56,6 @@ class ContentHandler extends React.Component {
         <div className="content">
           {this.selectivelyRender()}
         </div>
-        <button onClick={()=>{console.log(this.props.userInfo)}}>debug</button>
 
       </div>)
   }

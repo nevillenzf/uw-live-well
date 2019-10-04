@@ -12,10 +12,84 @@ code {
     monospace;
 }
 
-.housingCard {
+.WebsiteWrapper{
+  overflow: auto;
+  width: 100vw;
+  font-family:"Helvetica Neue";
+}
+
+.housingCard{
+  font-size: 20px;
   color: black;
+}
+
+.cardNames{
+  text-align:left;
+}
+
+.cardNames{
+  font-size:20px;
+}
+
+.cardItem{
+  text-align:right;
+}
+.nav-bar-wrapper{
+  min-height: 64px;
+  height: 64px;
+  top: 0px;
+}
+
+.wcBackMsg {
+  font-size: 20px;
+}
+#my-nav-bar{
+  background-color: rgba(196, 30, 58, 1);
+
+}
+
+#my-nav-bar button{
+  background-color: rgba(196, 30, 58, 1);
+  border-color: white;
+}
+
+#my-nav-bar button:hover{
+  border-color: white;
+  transition: all .2s ease-in-out;
+  transform: scale(1.1);
+}
+
+.kep-login-facebook.metro {
+    border-radius: 10;
+}
+
+.fb-button button:hover{
+  transition: all .2s ease-in-out;
+  transform: scale(1.1);
+}
+.rc-slider-track {
+    background-color: rgba(196, 30, 58);
+}
+
+.rc-slider-handle{
+  background-color: #fa9696;
+  border: 0px;
+} .rc-slider-handle:focus{
+    border-color: #ca1818;
+}
+
+.modal-header{
+  background-color: rgba(196, 30, 58, 1);
+  color: white;
 }
 
 .WebsiteWrapper{
   overflow: auto;
+  width: 100vw;
+  margin: 2px 2px 2px 2px;
+}
+
+.customSlider{
+  margin-left: 5%;
+  margin-right: 5%;
 }

@@ -132,7 +132,7 @@ class ListingModal extends React.Component {
           </Modal.Body>
 
           <Modal.Footer>
-            <Button variant="primary" onClick={this.props.onHide}>
+            <Button variant="secondary" onClick={this.props.onHide}>
               Cancel
             </Button>
           </Modal.Footer>

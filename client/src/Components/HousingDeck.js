@@ -10,19 +10,31 @@ class HousingDeck extends React.Component {
 
   render()
   {
-    return(
-        <div>
-        <CardDeck>
-          {this.props.listings.map((listings, listingIndex) => {
-              return (<HousingCard
-              key={listingIndex}
-              listings={listings}
-               />
-            )
-          })}
-        </CardDeck>
-        </div>
-    )
+    if (this.props.listings !== undefined && this.props.listings !== null && this.props.listings.length > 0)
+    {
+      return(
+          <div>
+          <CardDeck>
+            {this.props.listings.map((listings, listingIndex) => {
+                return (<HousingCard
+                key={listingIndex}
+                listing={listings}
+                 />
+              )
+            })}
+          </CardDeck>
+          </div>
+      )
+    }
+    else
+    {
+      return(
+          <div>
+            Doesn't seem to be anything here...
+          </div>
+      )
+    }
+
   }
 }
 

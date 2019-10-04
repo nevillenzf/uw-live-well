@@ -83,6 +83,6 @@ class House(db.Model):
             'bathrooms': self.bathrooms,
             'bedrooms': self.bedrooms,
             'poster_id': self.poster_id,
-            'curr_roommates': self.poster_id,
+            'curr_roommates': self.curr_roommates,
             'pref_gender': self.pref_gender,
         }

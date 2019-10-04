@@ -1,5 +1,5 @@
 import React from 'react';
-import {Navbar, Nav, Button, Dropdown, DropdownButton,Row} from 'react-bootstrap';
+import {Navbar, Nav, Button, Dropdown, DropdownButton,Row, Image} from 'react-bootstrap';
 import LoginModal from './LoginModal';
 import {connect} from 'react-redux';
 import store from '../index';
@@ -13,7 +13,7 @@ class MyNavBar extends React.Component {
       show : false,
     };
   }
-  
+
   handleClick(status) {
     //FIXME: IN FUTURE VERSIONS - MAKE SURE REFER TO REDUX STORAGE
     if (status === "poop")
@@ -68,13 +68,14 @@ class MyNavBar extends React.Component {
         )
     }
     else return (
-      <Row>
-        <div>
+      <Row >
+        <div className="wcBackMsg">
           <span>Welcome back,{this.props.userInfo.name}!</span>
+          <Image src={this.props.userInfo.pic_url} roundedCircle />
         </div>
 
         <div>
-        <DropdownButton id="dropdown-basic-button" title="My Profile">
+        <DropdownButton alignRight id="dropdown-menu-align-right" title="My Profile">
           <Dropdown.Item onClick={() => this.handleClick("profile")}>View Profile</Dropdown.Item>
           <Dropdown.Item onClick={() => this.handleClick("listings")}>My Listings</Dropdown.Item>
           <Dropdown.Item onClick={() => this.handleClick("favorites")}>Favorites</Dropdown.Item>
@@ -87,9 +88,8 @@ class MyNavBar extends React.Component {
 
   render() {
     return (
-      <div>
-      <div id="my-nav-bar" >
-      <Navbar bg="dark" variant="dark" fixed="top">
+      <div className="nav-bar-wrapper">
+      <Navbar id="my-nav-bar" variant="dark" fixed="top">
         <Navbar.Brand><Button onClick={() =>this.handleClick("home")}>UW Live Well!</Button></Navbar.Brand>
         <Nav className="mr-auto">
 
@@ -98,7 +98,7 @@ class MyNavBar extends React.Component {
           {this.renderUserInfo()}
         </div>
       </Navbar>
-      </div>
+
       <div>
         <LoginModal show={this.state.show} onHide={this.handleClose}/>
       </div>

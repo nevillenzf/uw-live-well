@@ -9,15 +9,15 @@ class FilterMenu extends React.Component {
   render()
   {
     return(
-      <div>
+      <div className="filterMenu">
         <h5>What are you looking for?</h5>
-          <MySlider name={"Rent"} min={0} max={3000}
+          <MySlider name={"rent"} min={0} max={3000}
                     defaultValue={[400,1000]}
                     marks={{0 : '$0', 3000 : '$3000'}}
                     useToolTip={true}
                     prefix={"$"}/>
           <br/>
-          <MySlider name={"Roommates"} min={0} max={5}
+          <MySlider name={"roommates"} min={0} max={5}
                     defaultValue={[1,2]}
                     marks={{0 : '0', 5 : '5+'}}
                     useToolTip={true}

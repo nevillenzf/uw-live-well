@@ -1,7 +1,10 @@
 import React from 'react';
-import {CardDeck} from 'react-bootstrap';
-import HousingCard from './HousingCard';
+import HousingDeck from './HousingDeck';
 import PageList from './PageList';
+import {connect} from 'react-redux';
+import axios from 'axios';
+import store from '../index';
+
 import '../stylesheet.css';
 
 //This is the component that holds all the filter related stuff which includes
@@ -9,43 +12,49 @@ import '../stylesheet.css';
 
 class HousingBrowser extends React.Component {
 
-  constructor (props) {
-        super (props);
-        //In the future it'll probs be listings.title, listing.address, listings.id,
-        //All information will be passed in through listings which is probably stored
-        //in the Redux store
-        this.state = {
-            listings : [{title:"testing", address:"holy street",roommates:4, bedrooms:2, rent:500},
-            {title:"another one",address:"pres house",roommates:6,bedrooms:6,rent:500}]
-        }
-    }
-
   render()
   {
     return(
       <div className="housingBrowser">
         <h5>Good matches for you</h5>
-        <br/>
+          <br/>
+            <HousingDeck listings={this.props.listings}/>
+          <br/>
         <div>
-        <CardDeck>
-        {this.state.listings.map((listings, listingIndex) => {
-            return (<HousingCard
-            key={listingIndex}
-            listings={listings}
-             />
-          )
-        })}
-        </CardDeck>
-        </div>
-
-        <br/>
-
-        <div>
-          <PageList totalListings={this.state.listings.length}/>
         </div>
       </div>
     )
   }
+
+  componentDidMount()
+  {
+    //Initial load - always load default page
+    let req = {"rent":[400,1000],"roommates":[1,2]}
+    axios.post(`http://localhost:5000/listings`, req)
+      .then(res => {
+        console.log(res.data)
+        if (typeof(res.data) !== "string")
+        {
+          store.dispatch({type: "CURR_LISTINGS",
+                          listings: res.data,
+                          });
+        }
+        else
+        {
+          console.log("There is nothing")
+          console.log(res.data);
+        }
+        this.forceUpdate();
+      })
+  }
 }
+
+const mapStateToProps = state => {
+  return {
+    listings: state.currListings,
+  }
+}
+
+HousingBrowser = connect(mapStateToProps)(HousingBrowser);
 
 export default HousingBrowser;

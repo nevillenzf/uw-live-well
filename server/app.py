@@ -1,7 +1,6 @@
 from flask import Flask,request,jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-
 import os
 import datetime
 import json
@@ -174,6 +173,31 @@ def add_listing():
             db.session.commit()
             print("New house added. House id={}\n".format(house.id))
             return jsonify(house.serialize()), 200
+        except Exception as e:
+            return (str(e))
+
+#Redirect all listing queries here
+@app.route('/listings', methods=['POST'])
+def query_listings():
+    #Receives a json file with User information including
+    #Create new user if it does not exist else returns an error message
+    data = request.get_json(force=True)
+    #Check data to check for houses that matches description
+    #enforce more than 5
+    if request.method == 'POST':
+        #Check if user exist in database if not, create new user using fbID and token
+        if (data["roommates"][1] == 5):
+            print("bug is here")
+            data["roommates"][1] = 999 #remove limit of roommates
+        try:
+            query = House.query. filter(House.rent >=data["rent"][0]). \
+                                    filter(House.rent <=data["rent"][1]). \
+                                    filter(House.curr_roommates>=data["roommates"][0]). \
+                                    filter(House.curr_roommates<=data["roommates"][1])
+            listings = query.all()
+            print(listings)
+
+            return jsonify([item.serialize() for item in listings]), 200
         except Exception as e:
             return (str(e))
 

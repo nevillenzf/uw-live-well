@@ -21,7 +21,7 @@ class ProfileTab extends React.Component {
             <Form.Label column sm="5">
               Email
             </Form.Label>
-            <Col sm="8">
+            <Col sm="6">
               <Form.Control defaultValue={this.props.userInfo.email} />
             </Col>
           </Form.Group>
@@ -30,7 +30,7 @@ class ProfileTab extends React.Component {
             <Form.Label column sm="5">
               Name
             </Form.Label>
-            <Col sm="8">
+            <Col sm="6">
               <Form.Control defaultValue={this.props.userInfo.name} />
             </Col>
           </Form.Group>
@@ -39,7 +39,7 @@ class ProfileTab extends React.Component {
             <Form.Label column sm="5">
               Old Password
             </Form.Label>
-            <Col sm="8">
+            <Col sm="6">
               <Form.Control type="password" placeholder="Old Password" />
             </Col>
           </Form.Group>
@@ -48,7 +48,7 @@ class ProfileTab extends React.Component {
             <Form.Label column sm="5">
               New Password
             </Form.Label>
-            <Col sm="8">
+            <Col sm="6">
               <Form.Control type="password" placeholder="New Password" />
             </Col>
           </Form.Group>

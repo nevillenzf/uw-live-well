@@ -62,6 +62,7 @@ const mapStateToProps = state => {
   return {
     signInStatus: state.signInStatus,
     userInfo: state.userInfo,
+    listings: state.listings,
   }
 }
 
