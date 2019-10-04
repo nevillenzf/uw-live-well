@@ -41,7 +41,9 @@ def register_acc():
     #Create new user if it does not exist else returns an error message
     if request.method == 'POST':
         print("Attempting to create new user")
-        data = request.get_json(force=True)
+        parsed_data = request.get_json(force=True)
+        data = parsed_data["user_info"]
+
         #Check if email already exist in database
         query = User.query.filter_by(email=data["email"]).first()
 
@@ -68,6 +70,31 @@ def register_acc():
             except Exception as e:
                 return (str(e))
 
+
+@app.route('/login', methods=['POST'])
+def login():
+    #Receives a json file with User information including
+    #Create new user if it does not exist else returns an error message
+    parsed_data = request.get_json(force=True)
+    data = parsed_data["user_info"]
+
+    if request.method == 'POST':
+        #Check if user exist in database if not, create new user using fbID and token
+        query = User.query.filter_by(email=data["email"],
+                                     password=data["password"]).first()
+        if query is not None:
+            #Account already exists SUCCESS
+            listing_query = House.query.filter_by(poster_id=query.serialize()["id"]).all()
+            #could be empty
+            result = query.serialize()
+
+            if listing_query is not None:
+                result["listings"] = [item.serialize() for item in listing_query]
+            return jsonify(result), 200
+        else:
+
+            return "Failed",200
+
 @app.route('/fblogin', methods=['POST'])
 def fb_login():
     #Receives a json file with User information including
@@ -82,7 +109,13 @@ def fb_login():
 
         if query is not None:
             #FB-login account already exists
-            return jsonify(query.serialize()), 200
+            listing_query = House.query.filter_by(poster_id=query.serialize()["id"]).all()
+            #could be empty
+            result = query.serialize()
+
+            if listing_query is not None:
+                result["listings"] = [item.serialize() for item in listing_query]
+            return jsonify(result), 200
         else:
             #password not required for fb user
             name = data["name"]

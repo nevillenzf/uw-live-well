@@ -1,22 +1,29 @@
 import React from 'react';
-import {Modal, Button, Form} from 'react-bootstrap';
+import {Modal, Button, Form, ButtonToolbar} from 'react-bootstrap';
 import FacebookLogin from 'react-facebook-login';
 import axios from 'axios';
 import store from '../index';
 class LoginModal extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      isRegistering : false,
+    };
+  }
 
   handleSubmit = (event) => {
     event.preventDefault()
 
     //Handle the form elements
     let email = document.getElementById('loginEmail').value;
-    let password = document.getElementById('loginpassword').value;
+    let password = document.getElementById('loginPassword').value;
 
 
-    let formVals = {email:email,password:password}
+    let user_info = {email:email,password:password}
 
     //Hide modal when receive something from fb
-    axios.post(`http://localhost:5000/login`, { formVals })
+    axios.post(`http://localhost:5000/login`, { user_info })
       .then(res => {
         //This means it's successfully logged in
         if (res.data.id)
@@ -29,15 +36,64 @@ class LoginModal extends React.Component {
                           data: {name: res.data.name,
                           email: res.data.email,
                           pic_url: res.data.pic_url,
-                          id: res.data.id},
+                          id: res.data.id,
+                          listings: res.data.listings}
                           });
         }
         else
         {
           //Alert ???
+          console.log(res.data);
         }
       })
   }
+
+  handleRegisterSubmit = (event) => {
+    event.preventDefault()
+
+    //Handle the form elements
+    let email = document.getElementById('registerEmail').value;
+    let confirmPassword = document.getElementById('registerConfirmPassword').value;
+    let password = document.getElementById('registerPassword').value;
+    let name = document.getElementById('registerName').value;
+    //Check if passwords match
+    if (password !== confirmPassword)
+    {
+      console.log("Passwords do not match")
+    }
+    else
+    {
+      let user_info = {email:email,password:password,name:name}
+      console.log(user_info)
+
+      //Hide modal when receive something from fb
+      axios.post(`http://localhost:5000/register`, { user_info })
+        .then(res => {
+          //This means it's successfully logged in
+          if (res.data.id)
+          {
+            console.log(res.data);
+            //Hide the modal
+            this.props.onHide();
+            store.dispatch({type: "SIGN_IN_STATUS", status: true})
+            store.dispatch({type: "USER_INFO",
+                            data: {name: res.data.name,
+                            email: res.data.email,
+                            pic_url: res.data.pic_url,
+                            id: res.data.id,
+                            listings: res.data.listings}
+                            });
+          }
+          else
+          {
+            //Alert ???
+            console.log(res.data);
+          }
+        })
+    }
+
+  }
+
 
   responseFacebook = (response) => {
     //response is the shit that we got from Facebook
@@ -65,7 +121,8 @@ class LoginModal extends React.Component {
                           data: {name: res.data.name,
                           email: res.data.email,
                           pic_url: res.data.pic_url,
-                          id: res.data.id},
+                          id: res.data.id,
+                          listings: res.data.listings},
                           });
         }
         else
@@ -73,6 +130,90 @@ class LoginModal extends React.Component {
           //Alert? There might be a problem
         }
       })
+  }
+  selectivelyRender()
+  {
+    if (this.state.isRegistering)
+    {
+      return(
+        <div>
+        <h5>Register a New Account</h5>
+        <Form onSubmit={this.handleRegisterSubmit}>
+          <Form.Group controlId="registerEmail">
+            <Form.Label>Email</Form.Label>
+            <Form.Control type="email" placeholder="Enter email" />
+            <Form.Text className="text-muted">
+              We'll never share your email with anyone else.
+            </Form.Text>
+          </Form.Group>
+
+          <Form.Group controlId="registerName">
+            <Form.Label>Name</Form.Label>
+            <Form.Control type="text" placeholder="Enter name" />
+          </Form.Group>
+
+          <Form.Group controlId="registerPassword">
+            <Form.Label>Password</Form.Label>
+            <Form.Control type="password" placeholder="Password" />
+          </Form.Group>
+
+          <Form.Group controlId="registerConfirmPassword">
+            <Form.Label>Confirm Password</Form.Label>
+            <Form.Control type="password" placeholder="Confirm Password" />
+          </Form.Group>
+          <ButtonToolbar>
+            <Button variant="primary" type="submit">
+              Register
+            </Button>
+            <Button variant="secondary" onClick={()=>{this.setState({isRegistering:false})}}>
+              I Have an account!
+            </Button>
+          </ButtonToolbar>
+        </Form>
+        </div>)
+    }
+    else
+    {
+      return(
+        <div>
+        <div>
+          <FacebookLogin
+            appId="705105513337686"
+            autoLoad={false}
+            fields="name,email,picture"
+            callback={this.responseFacebook} />
+        </div>
+          <hr/>
+        <div>
+          <h5>Sign in on UW Live Well</h5>
+          <Form onSubmit={this.handleSubmit}>
+            <Form.Group controlId="loginEmail">
+              <Form.Label>Email</Form.Label>
+              <Form.Control type="email" placeholder="Enter email" />
+              <Form.Text className="text-muted">
+                We'll never share your email with anyone else.
+              </Form.Text>
+            </Form.Group>
+
+            <Form.Group controlId="loginPassword">
+              <Form.Label>Password</Form.Label>
+              <Form.Control type="password" placeholder="Password" />
+            </Form.Group>
+            <ButtonToolbar>
+              <Button variant="primary" type="submit">
+                Sign In
+              </Button>
+              <Button variant="success" onClick={()=>{this.setState({isRegistering:true})}}>
+                Register
+              </Button>
+            </ButtonToolbar>
+          </Form>
+        </div>
+        <hr/>
+
+        </div>
+      )
+    }
   }
 
   render()
@@ -85,36 +226,9 @@ class LoginModal extends React.Component {
           </Modal.Header>
 
           <Modal.Body>
-          <div>
-            <FacebookLogin
-              appId="705105513337686"
-              autoLoad={false}
-              fields="name,email,picture"
-              callback={this.responseFacebook} />
-          </div>
-            or
-          <div>
-            <h5>Sign in on UW Live Well</h5>
-            <Form onSubmit={this.handleSubmit}>
-              <Form.Group controlId="loginEmail">
-                <Form.Label>Email</Form.Label>
-                <Form.Control type="email" placeholder="Enter email" />
-                <Form.Text className="text-muted">
-                  We'll never share your email with anyone else.
-                </Form.Text>
-              </Form.Group>
-
-              <Form.Group controlId="loginPassword">
-                <Form.Label>Password</Form.Label>
-                <Form.Control type="password" placeholder="Password" />
-              </Form.Group>
-
-              <Button variant="primary" type="submit">
-                Sign In
-              </Button>
-            </Form>
-          </div>
-
+            <div>
+            {this.selectivelyRender()}
+            </div>
           </Modal.Body>
 
           <Modal.Footer>

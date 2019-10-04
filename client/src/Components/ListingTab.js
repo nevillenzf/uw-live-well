@@ -2,6 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {Button} from 'react-bootstrap';
 import ListingModal from './ListingModal';
+import HousingDeck from './HousingDeck';
 import '../stylesheet.css';
 
 //This is the component that holds all the filter related stuff which includes
@@ -25,7 +26,7 @@ class ListingTab extends React.Component {
   renderUserListings(){
     return (
       <div>
-        empty shit
+        <HousingDeck listings={this.props.userInfo.listings}/>
       </div>
     )
   }
@@ -48,6 +49,12 @@ class ListingTab extends React.Component {
         </div>
       </div>
     )
+  }
+
+  //Things to do after component mounts, asynchronously load listings from redux store
+  componentDidMount()
+  {
+
   }
 }
 

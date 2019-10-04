@@ -15,9 +15,8 @@ class HousingBrowser extends React.Component {
         //All information will be passed in through listings which is probably stored
         //in the Redux store
         this.state = {
-            listings: ['listing1', 'listing2', 'listing3', 'listing4','listing5'],
-            addresses: ['123 bum st', 'test addr', 'random addr', '456 covfefe ave','test run'],
-
+            listings : [{title:"testing", address:"holy street",roommates:4, bedrooms:2, rent:500},
+            {title:"another one",address:"pres house",roommates:6,bedrooms:6,rent:500}]
         }
     }
 
@@ -29,14 +28,13 @@ class HousingBrowser extends React.Component {
         <br/>
         <div>
         <CardDeck>
-          {this.state.listings.map((listings, listingIndex) => {
-              return (<HousingCard
-              key={listingIndex}
-              title={listings}
-              address={this.state.addresses[listingIndex]}
-               />
-            )
-          })}
+        {this.state.listings.map((listings, listingIndex) => {
+            return (<HousingCard
+            key={listingIndex}
+            listings={listings}
+             />
+          )
+        })}
         </CardDeck>
         </div>
 

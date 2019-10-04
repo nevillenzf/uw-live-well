@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import * as actions from '../actions';
 
 const signInState = false;
-const initUserInfo = {name: null,id: null, email: null, pic_url: null};
+const initUserInfo = {name: null,id: null, email: null, pic_url: null, listings:null};
 const defPage = "home"
 //0 means not signed in, 1 means signed in
 function signInStatus(state = signInState, action) {
