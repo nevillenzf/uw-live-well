@@ -12,8 +12,8 @@ class MyNavBar extends React.Component {
     this.state = {
       show : false,
     };
-
   }
+  
   handleClick(status) {
     //FIXME: IN FUTURE VERSIONS - MAKE SURE REFER TO REDUX STORAGE
     if (status === "poop")
@@ -21,16 +21,37 @@ class MyNavBar extends React.Component {
       //Render Modal
       this.setState({show: true});
     }
-    if (status === "logout")
+    else if (status === "home")
     {
       //Should push stuff to the database to save it
-      store.dispatch({type: "SIGN_IN_STATUS", status: false})
+      store.dispatch({type: "CURR_PAGE", page: status})
+    }
+    else if (status === "profile")
+    {
+      //Should push stuff to the database to save it
+      store.dispatch({type: "CURR_PAGE", page: status})
+    }
+    else if (status === "listings")
+    {
+      //Should push stuff to the database to save it
+      store.dispatch({type: "CURR_PAGE", page: status})
+    }
+    else if (status === "favorites")
+    {
+      //Should push stuff to the database to save it
+      store.dispatch({type: "CURR_PAGE", page: status})
+    }
+    else if (status === "logout")
+    {
+      //Should push stuff to the database to save it
+      store.dispatch({type: "SIGN_IN_STATUS", status: false});
       store.dispatch({type: "USER_INFO",
                       data: {name: null,
                       email: null,
                       pic_url: null,
                       id: null},
                       });
+      store.dispatch({type: "CURR_PAGE", page: "home"});
     }
   }
   handleClose = () => {
@@ -38,7 +59,6 @@ class MyNavBar extends React.Component {
   }
 
   renderUserInfo() {
-    console.log()
     if (this.props.signInStatus === false)
     {
         return (
@@ -55,8 +75,9 @@ class MyNavBar extends React.Component {
 
         <div>
         <DropdownButton id="dropdown-basic-button" title="My Profile">
-          <Dropdown.Item href="#/action-1">View Profile</Dropdown.Item>
-          <Dropdown.Item href="#/action-2">Favorites</Dropdown.Item>
+          <Dropdown.Item onClick={() => this.handleClick("profile")}>View Profile</Dropdown.Item>
+          <Dropdown.Item onClick={() => this.handleClick("listings")}>My Listings</Dropdown.Item>
+          <Dropdown.Item onClick={() => this.handleClick("favorites")}>Favorites</Dropdown.Item>
           <Dropdown.Divider />
           <Dropdown.Item onClick={() => this.handleClick("logout")}>Logout</Dropdown.Item>
         </DropdownButton>
@@ -69,7 +90,7 @@ class MyNavBar extends React.Component {
       <div>
       <div id="my-nav-bar" >
       <Navbar bg="dark" variant="dark" fixed="top">
-        <Navbar.Brand href="#home">UW Live Well!</Navbar.Brand>
+        <Navbar.Brand><Button onClick={() =>this.handleClick("home")}>UW Live Well!</Button></Navbar.Brand>
         <Nav className="mr-auto">
 
         </Nav>

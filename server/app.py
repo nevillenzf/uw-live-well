@@ -12,7 +12,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 CORS(app)
 db = SQLAlchemy(app)
 
-from models import User
+from models import User, House
 
 @app.route('/')
 def index():
@@ -104,6 +104,45 @@ def fb_login():
                 return jsonify(user.serialize()), 200
             except Exception as e:
                 return (str(e))
+
+@app.route('/addListing', methods=['POST'])
+def add_listing():
+    #Receives a json file with User information including
+    #Create new user if it does not exist else returns an error message
+    parsed_data = request.get_json(force=True)
+    data = parsed_data["formVals"]
+
+    if request.method == 'POST':
+        #Need not to query database to cross check, maybe in future implementations
+
+        title = data["title"]
+        address = data["address"]
+        rent = data["rent"]
+        type = data["type"]
+        bathrooms = data["bathrooms"]
+        bedrooms = data["bedrooms"]
+        poster_id = data["poster_id"]
+        curr_roommates = data["roommates"]
+        pref_gender = data["gender_pref"]
+
+        try:
+            house=House(
+                title=title,
+                address=address,
+                rent=rent,
+                type=type,
+                bathrooms=bathrooms,
+                bedrooms=bedrooms,
+                poster_id=poster_id,
+                curr_roommates=curr_roommates,
+                pref_gender=pref_gender
+            )
+            db.session.add(house)
+            db.session.commit()
+            print("New house added. House id={}\n".format(house.id))
+            return jsonify(house.serialize()), 200
+        except Exception as e:
+            return (str(e))
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
