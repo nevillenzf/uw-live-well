@@ -1,7 +1,5 @@
 import React from 'react';
-import MyNavBar from './MyNavBar';
-import FilterMenu from './FilterMenu';
-import HousingBrowser from './HousingBrowser';
+import ContentHandler from './ContentHandler';
 import '../stylesheet.css';
 
 class WebsiteWrapper extends React.Component {
@@ -16,9 +14,7 @@ class WebsiteWrapper extends React.Component {
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
         crossOrigin="anonymous"
       />
-        <MyNavBar/>
-        <FilterMenu/>
-        <HousingBrowser totalListings={10}/>
+        <ContentHandler/>
       </div>)
   }
 }

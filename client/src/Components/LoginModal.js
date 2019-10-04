@@ -1,11 +1,37 @@
 import React from 'react';
 import {Modal, Button, Form} from 'react-bootstrap';
 import FacebookLogin from 'react-facebook-login';
-
+import axios from 'axios';
+import store from '../index';
 class LoginModal extends React.Component {
 
   responseFacebook = (response) => {
-    console.log(response);
+    //response is the shit that we got from Facebook
+
+    //Set up for logging in
+    let user_info = {
+                      name:response.name,
+                      email:response.email,
+                      fbAccessToken:response.accessToken,
+                      fbID: response.userID,
+                      pic_url: response.picture.data.url,
+                      }
+
+    //Hide modal when receive something from fb
+    //this.props.onHide();
+    axios.post(`http://localhost:5000/fblogin`, { user_info })
+      .then(res => {
+        console.log(res.data);
+        //Hide the modal
+        this.props.onHide();
+        store.dispatch({type: "SIGN_IN_STATUS", status: true})
+        store.dispatch({type: "USER_INFO",
+                        data: {name: res.data.name,
+                        email: res.data.email,
+                        pic_url: res.data.pic_url,
+                        id: res.data.id},
+                        });
+      })
   }
 
   render()

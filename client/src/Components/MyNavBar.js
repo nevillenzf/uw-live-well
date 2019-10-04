@@ -1,11 +1,14 @@
 import React from 'react';
-import {Navbar, Nav, Button} from 'react-bootstrap';
+import {Navbar, Nav, Button, Dropdown, DropdownButton,Row} from 'react-bootstrap';
 import LoginModal from './LoginModal';
+import {connect} from 'react-redux';
+import store from '../index';
 
 class MyNavBar extends React.Component {
 
   constructor(props) {
     super(props);
+    this.renderUserInfo = this.renderUserInfo.bind(this);
     this.state = {
       show : false,
     };
@@ -18,9 +21,47 @@ class MyNavBar extends React.Component {
       //Render Modal
       this.setState({show: true});
     }
+    if (status === "logout")
+    {
+      //Should push stuff to the database to save it
+      store.dispatch({type: "SIGN_IN_STATUS", status: false})
+      store.dispatch({type: "USER_INFO",
+                      data: {name: null,
+                      email: null,
+                      pic_url: null,
+                      id: null},
+                      });
+    }
   }
   handleClose = () => {
     this.setState({show: false});
+  }
+
+  renderUserInfo() {
+    console.log()
+    if (this.props.signInStatus === false)
+    {
+        return (
+          <div>
+            <Button onClick={() =>this.handleClick("poop")}>Sign In!</Button>
+          </div>
+        )
+    }
+    else return (
+      <Row>
+        <div>
+          <span>Welcome back,{this.props.userInfo.name}!</span>
+        </div>
+
+        <div>
+        <DropdownButton id="dropdown-basic-button" title="My Profile">
+          <Dropdown.Item href="#/action-1">View Profile</Dropdown.Item>
+          <Dropdown.Item href="#/action-2">Favorites</Dropdown.Item>
+          <Dropdown.Divider />
+          <Dropdown.Item onClick={() => this.handleClick("logout")}>Logout</Dropdown.Item>
+        </DropdownButton>
+        </div>
+      </Row>)
   }
 
   render() {
@@ -33,7 +74,7 @@ class MyNavBar extends React.Component {
 
         </Nav>
         <div id="outline-info">
-          <Button onClick={() =>this.handleClick("poop")}>Sign In!</Button>
+          {this.renderUserInfo()}
         </div>
       </Navbar>
       </div>
@@ -43,5 +84,14 @@ class MyNavBar extends React.Component {
     </div>)
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    signInStatus: state.signInStatus,
+    userInfo: state.userInfo,
+  }
+}
+
+MyNavBar = connect(mapStateToProps)(MyNavBar);
 
 export default MyNavBar;

@@ -1,5 +1,6 @@
 from flask import Flask,request,jsonify
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 
 import os
 import datetime
@@ -8,6 +9,7 @@ import json
 app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+CORS(app)
 db = SQLAlchemy(app)
 
 from models import User
@@ -60,7 +62,9 @@ def register_acc():
                 )
                 db.session.add(user)
                 db.session.commit()
-                return "New user added. User id={}".format(user.id)
+                print("New user added. User id={}".format(user.id))
+
+                return jsonify(user.serialize()), 200
             except Exception as e:
                 return (str(e))
 
@@ -68,13 +72,38 @@ def register_acc():
 def fb_login():
     #Receives a json file with User information including
     #Create new user if it does not exist else returns an error message
-    data = request.get_json(force=True);
+    parsed_data = request.get_json(force=True)
+    data = parsed_data["user_info"]
+
     if request.method == 'POST':
-        #Check if user exist in database
-        query = db.execute("SELECT * FROM users WHERE fbID={} AND fbAccessToken={};"
-                    .format(data.fbID,data.fbAccessToken))
-        print(query)
-        return "poop", 200
+        #Check if user exist in database if not, create new user using fbID and token
+        query = User.query.filter_by(email=data["email"],
+                                     fbID=data["fbID"]).first()
+
+        if query is not None:
+            #FB-login account already exists
+            return jsonify(query.serialize()), 200
+        else:
+            #password not required for fb user
+            name = data["name"]
+            email = data["email"]
+            fbAccessToken = data["fbAccessToken"]
+            fbID = data["fbID"]
+            pic_url = data["pic_url"]
+            try:
+                user=User(
+                    name=name,
+                    email=email,
+                    fbAccessToken=fbAccessToken,
+                    fbID=fbID,
+                    pic_url=pic_url
+                )
+                db.session.add(user)
+                db.session.commit()
+                print("New user added. User id={}\n".format(user.id))
+                return jsonify(user.serialize()), 200
+            except Exception as e:
+                return (str(e))
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

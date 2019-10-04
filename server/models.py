@@ -38,5 +38,5 @@ class User(db.Model):
             'pic_url':self.pic_url,
             'email': self.email,
             'fbAccessToken': self.fbAccessToken,
-            'fbID': self.fbID,
+            'fbID': '{}'.format(self.fbID),
         }
