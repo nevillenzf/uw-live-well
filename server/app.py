@@ -172,6 +172,36 @@ def add_listing():
             db.session.add(house)
             db.session.commit()
             print("New house added. House id={}\n".format(house.id))
+            user_id = User.query.filter_by(id=poster_id).first()
+            user_name = user_id.serialize()["name"]
+            house["user_name"] = user_name
+            return jsonify(house.serialize()), 200
+        except Exception as e:
+            return (str(e))
+
+@app.route('/addFavorite', methods=['POST'])
+def add_favorite():
+    #Receives a json file with User information including
+    #Create new user if it does not exist else returns an error message
+    parsed_data = request.get_json(force=True)
+    data = parsed_data["formVals"]
+
+    if request.method == 'POST':
+        #Need not to query database to cross check, maybe in future implementations
+
+        user_id = data["user_id"]
+        house_id = data["house_id"]
+
+        try:
+            favorite=Favorite(
+                user_id=user_id,
+                house_id=house_id,
+            )
+            db.session.add(favorite)
+            db.session.commit()
+            print("New favorite added for user id={} House id={}\n" \
+            .format(favorite.user_id, favorite.house_id))
+            house = House.query.filter_by(id=house_id).first()
             return jsonify(house.serialize()), 200
         except Exception as e:
             return (str(e))
@@ -187,7 +217,6 @@ def query_listings():
     if request.method == 'POST':
         #Check if user exist in database if not, create new user using fbID and token
         if (data["roommates"][1] == 5):
-            print("bug is here")
             data["roommates"][1] = 999 #remove limit of roommates
         try:
             query = House.query. filter(House.rent >=data["rent"][0]). \
@@ -195,9 +224,15 @@ def query_listings():
                                     filter(House.curr_roommates>=data["roommates"][0]). \
                                     filter(House.curr_roommates<=data["roommates"][1])
             listings = query.all()
-            print(listings)
+            responsePrep = [item.serialize() for item in listings]
+            #Add username into the list
+            for item in responsePrep:
+                user_id = User.query.filter_by(id=item["poster_id"]).first()
+                #Get username
+                user_name = user_id.serialize()["name"]
+                item["user_name"] = user_name
 
-            return jsonify([item.serialize() for item in listings]), 200
+            return jsonify(responsePrep), 200
         except Exception as e:
             return (str(e))
 

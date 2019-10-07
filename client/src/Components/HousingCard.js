@@ -2,7 +2,7 @@ import React from 'react';
 import {Card, Button, ListGroup, ListGroupItem} from 'react-bootstrap';
 import ListingInfoModal from './ListingInfoModal';
 import 'rc-slider/assets/index.css';
-
+import '../stylesheet.css';
 
 class HousingCard extends React.Component {
 
@@ -22,7 +22,8 @@ class HousingCard extends React.Component {
     //Update the list group items
     return(
       <div className="housingCardGroup">
-        <div className="housingCard">
+
+        <div className="housingCard" key={this.props.myKeyTag}>
         <Card style={{ width: '20rem' }}>
           <Card.Img variant="top" src="https://timedotcom.files.wordpress.com/2015/07/360_pie_1125.jpg?w=800&quality=85" />
           <Card.Body>
@@ -36,12 +37,12 @@ class HousingCard extends React.Component {
               <ListGroupItem><span className="cardNames" >Bedrooms:</span>
                               <span className="cardItem">{this.props.listing.bedrooms}</span></ListGroupItem>
             </ListGroup>
-            <Button variant="secondary" onClick={() => {this.setState({show: true})}}>Check Me Out!</Button>
+            <Button variant="light" onClick={() => {this.setState({show: true})}}>Check Me Out!</Button>
           </Card.Body>
         </Card>
         </div>
         <div>
-          <ListingInfoModal listing={this.props.listing} show={this.state.show} onHide={this.handleClose} size="xl"/>
+          <ListingInfoModal listing={this.props.listing} show={this.state.show} onHide={this.handleClose} size="xl" owner={this.props.owner}/>
         </div>
       </div>
     )

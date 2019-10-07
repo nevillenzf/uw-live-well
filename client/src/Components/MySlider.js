@@ -15,7 +15,9 @@ class MySlider extends React.Component {
                     name: this.props.name,
                     values: values,
                     });
-
+    store.dispatch({type: "LOAD_LISTINGS",
+                    loadListings: false,
+                    });
     //Send axios request to refresh search for houses on page based on redux filter vals
     let req = this.props.sliderVal
     //Update certain vals in request to reflect correct query
@@ -35,6 +37,10 @@ class MySlider extends React.Component {
           console.log("There is nothing")
           console.log(res.data);
         }
+        setTimeout(()=>{store.dispatch({type: "LOAD_LISTINGS",
+                                loadListings: true,
+                                });
+                        this.forceUpdate()},1000);
       })
   }
 

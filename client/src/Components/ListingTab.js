@@ -1,6 +1,9 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {Button} from 'react-bootstrap';
+import {Button, Spinner} from 'react-bootstrap';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
+
 import ListingModal from './ListingModal';
 import HousingDeck from './HousingDeck';
 import '../stylesheet.css';
@@ -15,6 +18,7 @@ class ListingTab extends React.Component {
     this.renderUserListings = this.renderUserListings.bind(this);
     this.state = {
       show : false,
+      doneLoading: false,
     };
   }
   handleClick(option) {
@@ -24,11 +28,28 @@ class ListingTab extends React.Component {
     }
   }
   renderUserListings(){
-    return (
-      <div>
-        <HousingDeck listings={this.props.userInfo.listings}/>
-      </div>
-    )
+    if (this.state.doneLoading)
+    {
+      return (
+        <div>
+        <div>
+          <Button variant="light" onClick={() =>this.handleClick("add")}>
+            <FontAwesomeIcon icon={faPlus} /> Add Listing
+          </Button>
+        </div>
+          <HousingDeck myDeck={"testing"} listings={this.props.userInfo.listings} />
+        </div>
+      )
+    }
+    else
+    {
+      return (
+        <div className="loadingScreen">
+          <Spinner animation="border" variant="danger" />
+        </div>
+      )
+    }
+
   }
 
   handleClose = () => {
@@ -40,10 +61,8 @@ class ListingTab extends React.Component {
     return(
       <div className="ListingTab">
         <h5>My Listings</h5>
+
         {this.renderUserListings()}
-        <div>
-          <Button onClick={() =>this.handleClick("add")}>Add Listing</Button>
-        </div>
         <div>
           <ListingModal show={this.state.show} size="xl" onHide={this.handleClose}/>
         </div>
@@ -54,7 +73,7 @@ class ListingTab extends React.Component {
   //Things to do after component mounts, asynchronously load listings from redux store
   componentDidMount()
   {
-
+    setTimeout(()=>{this.setState({doneLoading: true});},1000);
   }
 }
 

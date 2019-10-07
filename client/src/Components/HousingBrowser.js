@@ -1,5 +1,6 @@
 import React from 'react';
 import HousingDeck from './HousingDeck';
+import {Spinner} from 'react-bootstrap';
 import PageList from './PageList';
 import {connect} from 'react-redux';
 import axios from 'axios';
@@ -11,17 +12,42 @@ import '../stylesheet.css';
 //but not limited to Rent, number of roommates, shared room, amenities etc.
 
 class HousingBrowser extends React.Component {
+  constructor(props) {
+    super(props);
+    this.selectivelyRender = this.selectivelyRender.bind(this);
+  }
 
+  selectivelyRender()
+  {
+    console.log(this.props)
+
+    if (this.props.doneLoading)
+    {
+      return (
+        <div className="housingBrowser">
+          <h5>Good matches for you</h5>
+            <br/>
+              <HousingDeck listings={this.props.listings}/>
+            <br/>
+          <div>
+          </div>
+        </div>
+      )
+    }
+    else
+    {
+      return (
+        <div className="loadingScreen">
+          <Spinner animation="border" variant="danger" />
+        </div>
+      )
+    }
+  }
   render()
   {
     return(
-      <div className="housingBrowser">
-        <h5>Good matches for you</h5>
-          <br/>
-            <HousingDeck listings={this.props.listings}/>
-          <br/>
-        <div>
-        </div>
+      <div className="housingBrowserWrapper">
+        {this.selectivelyRender()}
       </div>
     )
   }
@@ -44,14 +70,21 @@ class HousingBrowser extends React.Component {
           console.log("There is nothing")
           console.log(res.data);
         }
-        this.forceUpdate();
+
       })
+
+      setTimeout(()=>{store.dispatch({type: "LOAD_LISTINGS",
+                              loadListings: true,
+                              });
+                      this.forceUpdate()},1000);
+
   }
 }
 
 const mapStateToProps = state => {
   return {
     listings: state.currListings,
+    doneLoading: state.loadListings,
   }
 }
 

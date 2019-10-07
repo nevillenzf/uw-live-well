@@ -86,3 +86,26 @@ class House(db.Model):
             'curr_roommates': self.curr_roommates,
             'pref_gender': self.pref_gender,
         }
+
+class Favorite(db.Model):
+    __tablename__ = 'favorites'
+
+    #If logging in through Facebook, DOES NOT require password
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, nullable=False)
+    house_id = db.Column(db.Integer, nullable=False)
+
+    #In the future initialize pic_url with None but when pulled back to React, just full from app storage
+    def __init__(self, user_id, house_id):
+        self.user_id = user_id
+        self.house_id = house_id
+
+    def __repr__(self):
+        return '<id {}>'.format(self.id)
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'house_id': self.house_id,
+        }

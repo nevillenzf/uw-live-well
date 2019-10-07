@@ -53,7 +53,7 @@ class ProfileTab extends React.Component {
             </Col>
           </Form.Group>
 
-          <Button type="submit">Confirm Changes</Button>
+          <Button type="submit" variant="light" >Confirm Changes</Button>
         </Form>
         </div>
       </div>

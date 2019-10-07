@@ -55,8 +55,16 @@ class ListingModal extends React.Component {
     //Hide modal when receive something from fb
     axios.post(`http://localhost:5000/addListing`, { formVals })
       .then(res => {
-        console.log(res.data);
+        //Add listing to user listings
         //Hide the modal
+        store.dispatch({type: "USER_INFO",
+                        data: {
+                          name: this.props.userInfo.name,
+                          email: this.props.userInfo.email,
+                          pic_url: this.props.userInfo.pic_url,
+                          id: this.props.userInfo.id,
+                          listings: [...this.props.userInfo.listings,res.data]}
+                        });
         this.props.onHide();
 
       })
@@ -123,7 +131,7 @@ class ListingModal extends React.Component {
                 </Form.Control>
               </Form.Group>
 
-              <Button variant="primary" type="submit">
+              <Button variant="danger" type="submit">
                 Add Listing
               </Button>
             </Form>

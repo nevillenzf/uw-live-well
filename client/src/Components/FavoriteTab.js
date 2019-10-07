@@ -1,4 +1,6 @@
 import React from 'react';
+import HousingDeck from './HousingDeck';
+import {Spinner} from 'react-bootstrap';
 import {connect} from 'react-redux';
 import '../stylesheet.css';
 
@@ -7,15 +9,50 @@ import '../stylesheet.css';
 
 class FavoriteTab extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.renderUserListings = this.renderUserListings.bind(this);
+    this.state = {
+      doneLoading: false,
+    };
+  }
+
+  renderUserListings(){
+    if (this.state.doneLoading)
+    {
+      return (
+        <div>
+          <HousingDeck myDeck={"testing"} listings={this.props.userInfo.listings} />
+        </div>
+      )
+    }
+    else
+    {
+      return (
+        <div className="loadingScreen">
+          <Spinner animation="border" variant="danger" />
+        </div>
+      )
+    }
+
+  }
+
   render()
   {
     return(
       <div className="FavoriteTab">
       <h5>My Favorites</h5>
-        There doesn't seem to be anything here at the moment...
+        {this.renderUserListings()}
       </div>
     )
   }
+
+  //Things to do after component mounts, asynchronously load listings from redux store
+  componentDidMount()
+  {
+    setTimeout(()=>{this.setState({doneLoading: true});},1000);
+  }
+  
 }
 
 const mapStateToProps = state => {

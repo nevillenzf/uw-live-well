@@ -22,6 +22,12 @@ function userInfo(state = initUserInfo, action) {
   if (action.type === actions.USER_INFO)
   {
     //Store user info in redux state
+    //If nothing else exists then only edit listing
+    if (!action.data.name)
+    {
+      let newState = state;
+      newState.listings = action.data.listings
+    }
     return action.data;
   }
   else return state;
@@ -63,12 +69,36 @@ function sliderVal(state = defFilterVals, action) {
   }
   else return state;
 }
+
+function loadListings(state = false, action) {
+  //Current Section Action
+  if (action.type === actions.LOAD_LISTINGS)
+  {
+    console.log(action);
+    //Store user info in redux state
+    return action.loadListings;
+  }
+  else return state;
+}
+
+function favorites(state = [], action) {
+  //Current Section Action
+  if (action.type === actions.FAVORITES)
+  {
+    //Store user info in redux state
+    return action.favListings;
+  }
+  else return state;
+}
+
 const reducers = combineReducers({
   signInStatus,
   userInfo,
   currPage,
   currListings,
-  sliderVal
+  sliderVal,
+  loadListings,
+  favorites
 })
 
 export default reducers;
